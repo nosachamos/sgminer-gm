@@ -512,11 +512,13 @@ __kernel void search2(__global uint4 *Scratchpad, __global ulong *states, __glob
 	
 	if(!get_local_id(1))
 	{
-		for(int i = 0; i < 25; ++i) State[i] = states[i];
-		
-		keccakf1600_2(State);
-		
-		for(int i = 0; i < 25; ++i) states[i] = State[i];
+        //for(int i = 0; i < 25; ++i) State[i] = states[i];
+        memcpy(State, states, sizeof(State));
+        
+        keccakf1600_2(State);
+        
+        //for(int i = 0; i < 25; ++i) states[i] = State[i];
+        memcpy(states, State, sizeof(states));
 		
 		switch(State[0] & 3)
 		{
